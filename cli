@@ -1,0 +1,63 @@
+#!/usr/local/bin/php
+<?php
+
+require_once('vendor/autoload.php');
+
+if(!defined('STDIN') )
+	exit('Script must run from CLI');
+
+$config = json_decode(trim(file_get_contents('config.json')));
+
+if(!$config || !isset($config->username) || !isset($config->password) || !isset($config->display)) {
+	die('malformed config.json');
+}
+
+function create_group($name, $participants) {
+	global $config;
+	$participants = explode(',', $participants);
+	$participants[] = $config->username;
+	require_once 'php/whatsprot.class.php';
+	$w = new WhatsProt($config->username, 0, $config->display, false);
+	$w->connect();
+	$w->loginWithPassword($config->password);
+	$gid = $w->sendGroupsChatCreate($name, $participants);
+	echo $gid;
+	return $gid;
+}
+
+function send_to_group($GID, $message) {
+	global $config;
+	require_once 'php/whatsprot.class.php';
+	$w = new WhatsProt($config->username, 0, $config->display, false);
+	$w->connect();
+	$w->loginWithPassword($config->password);
+	echo $w->sendMessage($GID, $message);
+}
+
+use FusePump\Cli\Inputs as Inputs;
+
+$cli = new Inputs($argv);
+
+$cli->option('-cg, --creategroup [Group Name] [participants]', 'Create a group');
+$cli->option('-sg, --sendgroup [GID] [message]', 'Send to Group');
+$cli->param('pom', 'Participant list separated by , eg: 60123456789,601323456789 or message to send to group.');
+
+if(!$cli->parse()) {
+    exit(1); //60169205173-1387313717
+}
+
+if($cli->get('-cg')) {
+	$cg = $cli->get('-cg');
+	$pom = $cli->get('pom');
+	if(!$pom) {
+		$pom = '';
+	}
+	create_group($cg, $pom);
+} else if ($cli->get('-sg')) {
+	$sg = $cli->get('-sg');
+	$pom = $cli->get('pom');
+	if(!$pom) {
+		$pom = '';
+	}
+	send_to_group($sg, $pom);
+}

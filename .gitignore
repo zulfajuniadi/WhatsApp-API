@@ -1,0 +1,5 @@
+nextChallenge.dat
+composer.lock
+config.json
+.foreverignore
+.DS_Store

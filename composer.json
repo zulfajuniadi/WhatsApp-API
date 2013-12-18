@@ -1,0 +1,6 @@
+{
+	"require" : {
+		"fusepump/cli.php": "0.5.0",
+		"gabordemooij/redbean": "v3.5.1"
+	}
+}

@@ -1,0 +1,11 @@
+{
+	"username" : "60169205173",
+	"password" : "f8vKCVCog0VyrBKLFEhh6t6d64w=",
+	"display"  : "Hasrimy Tasks",
+	"dbhost" : "localhost",
+	"dbuser" : "root",
+	"dbpass" : null,
+	"dbname" : "apiserver",
+	"dbfreq" : 3000
+}
+
